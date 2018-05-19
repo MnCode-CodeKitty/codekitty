@@ -4,7 +4,7 @@ import board
 import time
 import simpleio 
 
-###### Servos #####
+###### Servos #####  
 servo = simpleio.Servo(board.A2)
 
 ###### Meow and Purr #####
