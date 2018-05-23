@@ -1,51 +1,54 @@
 from digitalio import DigitalInOut, Direction, Pull
 import audioio
 import board
-import time
+from time import sleep
 import simpleio
 
 ###### Servos #####  
-leftServo = simpleio.Servo(board.A2)
-rightServo = simpleio.Servo(board.A3)
+leftServo = simpleio.Servo(board.A1)
+rightServo = simpleio.Servo(board.A2)
 
-def setRange(userInput):
-    if 0 <= userInput <= 10:
-        fixedInput = userInput/10
-        return fixedInput
-    else:
-        print("Function accepts numbers between 1 and 10.")
-
-def driveRobot(inputTime,lDir,rDir,*inputSpeed):
-    # Set the input speed to .8 if they don't enter a speed
-    if not inputSpeed:
-        speed = .8
-    else:
-        speed = setRange(inputSpeed)
-    # Make sure the time is between 1 and 10
-    if not 1 <= inputTime <= 10:
-        print "Time must be a decimal number between 1 and 10."
-        exit
-    if lDir == 2:
-        lSpeed = -speed
-    else:
-        lSpeed = speed
-    if rDir == 2:
-        rSpeed = -speed
-    else:
-        rSpeed = speed
-    leftServo.angle = lSpeed
-    time.sleep = inputTime 
-
+# The go() function drives the robot forward.
 def go(userTime,*userSpeed):
-    driveRobot(userTime,1,1,*userSpeed)
+    if not 1 <= userTime <= 10:
+        print ("Time must be between 1 and 10 seconds.")
+        exit
+    if not userSpeed:
+        lSpeed = 0
+        rSpeed = 180
+    if (userSpeed == 1):
+        lSpeed = 70
+        rSpeed = 110
+    else if (userSpeed == 2):
+        lSpeed = 60
+        rSpeed = 120 
+    else if (userSpeed == 3):
+        lSpeed = 40
+        rSpeed = 130
+    else if (userSpeed == 4):
+        lSpeed = 40
+        rSpeed = 140
+    else if (userSpeed == 5):
+        lSpeed = 30
+        rSpeed = 150
+    else if (userSpeed == 6):
+        lSpeed = 20
+        rSpeed = 160
+    else if (userSpeed == 7):
+        lSpeed = 0
+        rSpeed = 180
+    else:
+        print("Speed must be between 1 and 7, where 7 is full speed.")
+        exit
+    print("Going forward (lSpeed: "+ lSpeed + ", rSpeed: " + rSpeed + ") for " + userTime + " seconds.")
+    leftServo.angle = lSpeed
+    rightServo.angle = rSpeed
+    sleep(userTime)                
 
-def back(userTime,*userSpeed):
-    driveRobot(userTime,2,2,*userSpeed)
-
-def angleToSpeed(turnAngle):
+#def angleToSpeed(turnAngle):
     # Set the 'speed factor' that the angle is divided by to get the movement time
-    speedFactor = 30
-    baseSpeed = turnAngle/speedFactor
+    #speedFactor = 30
+    #baseSpeed = turnAngle/speedFactor
 
 ###### Sound Functions #####
 PIEZO_PIN = board.D3
