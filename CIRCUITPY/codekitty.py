@@ -1,112 +1,283 @@
-from digitalio import DigitalInOut, Direction, Pull
-#import audioio
-import board
-import time
+from time import sleep
 import simpleio
+import board
+import adafruit_dotstar
+import touchio
+from analogio import AnalogIn   
 
-###### Servos #####  
+### SOUND FUNCTIONS
+def note(notestr,durint):
+    # OCTAVE 3
+    if (notestr == "C3"):
+        notefreq = 131
+    elif (notestr == "C#3"):
+        notefreq = 139
+    elif (notestr == "D3"):
+        notefreq = 147
+    elif (notestr == "Eb3"):
+        notefreq = 156
+    elif (notestr == "E3"):
+        notefreq = 165
+    elif (notestr == "F3"):
+        notefreq = 175
+    elif (notestr == "F#3"):
+        notefreq = 185
+    elif (notestr == "G3"):
+        notefreq = 196
+    elif (notestr == "G#3"):
+        notefreq = 208
+    elif (notestr == "A3"):
+        notefreq = 220
+    elif (notestr == "Bb3"):
+        notefreq = 233
+    elif (notestr == "B3"):
+        notefreq = 247
+    # OCTAVE 4
+    elif (notestr == "C4"):
+        notefreq = 262
+    elif (notestr == "C#4"):
+        notefreq = 277
+    elif (notestr == "D4"):
+        notefreq = 294
+    elif (notestr == "Eb4"):
+        notefreq = 293
+    elif (notestr == "E4"):
+        notefreq = 330
+    elif (notestr == "F4"):
+        notefreq = 349
+    elif (notestr == "F#4"):
+        notefreq = 370
+    elif (notestr == "G4"):
+        notefreq = 392
+    elif (notestr == "G#4"):
+        notefreq = 415
+    elif (notestr == "A4"):
+        notefreq = 440
+    elif (notestr == "Bb4"):
+        notefreq = 466
+    elif (notestr == "B4"):
+        notefreq = 494
+    # OCTAVE 5
+    elif (notestr == "C5"):
+        notefreq = 523
+    elif (notestr == "C#5"):
+        notefreq = 554
+    elif (notestr == "D5"):
+        notefreq = 587
+    elif (notestr == "Eb5"):
+        notefreq = 622
+    elif (notestr == "E5"):
+        notefreq = 659
+    elif (notestr == "F5"):
+        notefreq = 699
+    elif (notestr == "F#5"):
+        notefreq = 740
+    elif (notestr == "G5"):
+        notefreq = 784
+    elif (notestr == "G#5"):
+        notefreq = 831
+    elif (notestr == "A5"):
+        notefreq = 880
+    elif (notestr == "Bb5"):
+        notefreq = 932
+    elif (notestr == "B5"):
+        notefreq = 988
+    else:
+        print("Invalid note")
+        
+    if (durint == 1):
+        notedur = 1.0
+    elif (durint == 2):
+        notedur = 0.5
+    elif (durint == 4):
+        notedur = 0.25
+    elif (durint == 8):
+        notedur = 0.125
+    else:
+        print("Invalid note duration")
+        
+    if (notestr == "rest"):
+        sleep(notedur)   
+
+    simpleio.tone(board.D3, notefreq, duration=notedur)
+    sleep(notedur/2)
+    
+def rest(restint):
+    if (restint == 1):
+        restdur = 1.0
+    elif (restint == 2):
+        restdur = 0.5
+    elif (restint == 4):
+        restdur = 0.25
+    elif (restint == 8):
+        restdur = 0.125
+    else:
+        print("Invalid rest duration")
+    sleep(restdur)
+                
+def march():
+    # First measure
+    note("A4",2)
+    note("A4",2)
+    note("A4",2)
+    note("F4",4)
+    note("C4",4)
+    note("A4",2)
+    note("F4",4)
+    note("C4",4)
+    note("A4",1)
+    # Second Measure
+    note("E5",2)
+    note("E5",2)
+    note("E5",2)
+    note("F5",4)
+    note("C5",4)
+    note("G#4",2)
+    note("F4",4)
+    note("C4",4)
+    note("A4",1)
+    note("A5",2)
+    note("A4",4)
+    note("A4",4)
+    note("A5",2)
+    note("G#5",4)
+    note("G5",4)
+    # MEASURE 3
+    note("F#5",4)
+    note("F5",4)
+    note("F#5",4)
+    note("Bb4",4)
+    note("Eb4",2)
+    note("D4",4)
+    note("C#4",4)
+    note("C4",4)
+    note("B4",4)
+    note("C4",4)
+    note("F3",4)
+    note("G#3",2)
+    note("F3",4)
+    note("G#3",2)
+
+    
+def beep():
+    simpleio.tone(board.D3, 330, duration=0.25)
+    
+simpleio.tone(board.D3, 1, duration=0)   
+    
+# SERVO FUNCTIONS
 leftServo = simpleio.Servo(board.A2)
 rightServo = simpleio.Servo(board.A1)
 
-def setRange(userInput):
-    if 0 <= userInput <= 10:
-        fixedInput = userInput/10
-        return fixedInput
+def go(t,spdtxt="fast"):
+    if(spdtxt == 'fast'):
+        leftServo.angle = 0
+        rightServo.angle = 180
+    elif(spdtxt == 'slow'):
+        leftServo.angle = 50
+        rightServo.angle = 120
     else:
-        print("Function accepts numbers between 1 and 10.")
-
-def driveRobot(inputTime,lDir,rDir,*inputSpeed):
-    # Set the input speed to .8 if they don't enter a speed
-    if not inputSpeed:
-        speed = 1
-    else:
-        speed = setRange(inputSpeed)
-    # Make sure the time is between 1 and 10
-    if not 1 <= inputTime <= 10:
-        print ("Time must be a decimal number between 1 and 10.")
-        return
-    if lDir == 2:
-        lSpeed = -speed
-    else:
-        lSpeed = speed
-    if rDir == 2:
-        rSpeed = -speed
-    else:
-        rSpeed = speed
-        
-    leftServo.angle = lSpeed
-    rightServo.angle = rSpeed
-    time.sleep(inputTime) 
-
-def go(userTime,*userSpeed):
-    driveRobot(userTime,1,1,*userSpeed)
-
-def left(userTime,*userSpeed):
-    driveRobot(userTime,2,1,*userSpeed)
-    
-def right(userTime,*userSpeed):
-    driveRobot(userTime,1,2,*userSpeed)
-
-def back(userTime,*userSpeed):
-    driveRobot(userTime,2,2,*userSpeed)
-
-def angleToSpeed(turnAngle):
-    # Set the 'speed factor' that the angle is divided by to get the movement time
-    speedFactor = 30
-    baseSpeed = turnAngle/speedFactor
+        print("Invalid Argument")
+    sleep(t)
+    leftServo.angle = 90
+    rightServo.angle = 90
 
 def stop():
     leftServo.angle = 90
     rightServo.angle = 90
     
-###### Sound Functions #####
-PIEZO_PIN = board.D4
+def left(turn=90):
+    if(turn == 90):
+        leftServo.angle = 90
+        rightServo.angle = 180
+        sleep(1)
+    elif(turn == 45):
+        leftServo.angle = 90
+        rightServo.angle = 110
+        sleep(3)
+    else:
+        print("Invalid Argument")
+    leftServo.angle = 90
+    rightServo.angle = 90
+    
+def right(turn=90):
+    if(turn == 90):
+        leftServo.angle = 0
+        rightServo.angle = 90
+        sleep(1)
+    elif(turn == 45):
+        leftServo.angle = 60
+        rightServo.angle = 90
+        sleep(3)
+    else:
+        print("Invalid Argument")
+    leftServo.angle = 90
+    rightServo.angle = 90
+    
+def back(t,spdtxt="fast"):
+    if(spdtxt == 'fast'):
+        leftServo.angle = 180
+        rightServo.angle = 0
+    elif(spdtxt == 'slow'):
+        leftServo.angle = 120
+        rightServo.angle = 60
+    else:
+        print("Invalid Argument")
+    sleep(t)
+    leftServo.angle = 90
+    rightServo.angle = 90
 
-notes = {
-    "C4":262,
-    "D4":294,
-    "E4":330,
-    "F4":349,
-    "G4":392,
-    "A4":440,
-    "B4":494
-}
+### TOUCH FUNCTIONS
+touch_pad = board.A0
+touch = touchio.TouchIn(touch_pad)
+# touch.value == True if touched
 
-durations = {
-    "1":1,
-    "2":.5,
-    "4":.25,
-    "8":.125,
-    "16":.0625
-}
+### SENSOR FUNCTIONS
+sensor = AnalogIn(board.A4)
+# sensor.value is value of sensor input
 
-def note(note,notetime):
-    simpleio.tone(PIEZO_PIN, notes[note]) #, duration=durations[notetime])
+### LED FUNCTIONS ###
+ledlight = adafruit_dotstar.DotStar(board.APA102_SCK, board.APA102_MOSI, 1)
 
-def rest(duration):
-    sleep(durations[duration])
+def wheel(pos):
+    # Input a value 0 to 255 to get a color value.
+    # The colours are a transition r - g - b - back to r.
+    if pos < 0 or pos > 255:
+        return 0, 0, 0
+    if pos < 85:
+        return int(255 - pos * 3), int(pos * 3), 0
+    if pos < 170:
+        pos -= 85
+        return 0, int(255 - pos * 3), int(pos * 3)
+    pos -= 170
+    return int(pos * 3), 0, int(255 - (pos * 3))
 
-def beep(beeps):
-    for i in range(beeps):
-        note("B4",2)
-        rest(2)
 
-###### Meow and Purr #####
-#spkrenable = DigitalInOut(board.SPEAKER_ENABLE)
-#spkrenable.direction = Direction.OUTPUT
-#spkrenable.value = True
-#
-#def play_file(filename):
-#    print("playing file "+filename)
-#    f = open(filename, "rb")
-#    a = audioio.AudioOut(board.D3, f)
-#    a.play()
-#    while a.playing:
-#        pass
-#    print("finished")
-#
-#def meow():
-#    play_file("meow.wav")
-#
-#def purr():
-#    play_fie("purr.wav")
+def led(color,br=0.3):
+    if(br>1):
+        br=1
+    ledlight.brightness=br
+    if(color=="red"):
+        ledlight[0]=(255,0,0)
+    elif(color=="orange"):
+        ledlight[0]=(255,165,0)
+    elif(color=="yellow"):
+        ledlight[0]=(255,255,0)
+    elif(color=="green"):
+        ledlight[0]=(0,255,0)
+    elif(color=="blue"):
+        ledlight[0]=(0,0,255)
+    elif(color=="purple"):
+        ledlight[0]=(128,0,128)
+    elif(color=="pink"):
+        ledlight[0]=(255,192,203)
+    elif(color=="off"):
+        ledlight[0]=(0, 0, 0)
+        
+
+def rainbow():
+    ledlight.brightness = 0.3
+    i = 0
+    while True:
+        i = (i + 1) % 256  # run from 0 to 255
+        ledlight.fill(wheel(i))
+        sleep(0.01)
