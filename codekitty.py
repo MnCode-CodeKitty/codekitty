@@ -189,11 +189,11 @@ def left(turn=90):
     if(turn == 90):
         leftServo.angle = 90
         rightServo.angle = 180
-        sleep(1)
+        sleep(.35)
     elif(turn == 45):
         leftServo.angle = 90
-        rightServo.angle = 110
-        sleep(3)
+        rightServo.angle = 120
+        sleep(.6)
     else:
         print("Invalid Argument")
     leftServo.angle = 90
@@ -203,11 +203,11 @@ def right(turn=90):
     if(turn == 90):
         leftServo.angle = 0
         rightServo.angle = 90
-        sleep(1)
+        sleep(.65)
     elif(turn == 45):
         leftServo.angle = 60
         rightServo.angle = 90
-        sleep(3)
+        sleep(.5)
     else:
         print("Invalid Argument")
     leftServo.angle = 90
