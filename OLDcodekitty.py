@@ -1,8 +1,9 @@
 from time import sleep
-import simpleio
 import board
-import adafruit_dotstar
-import touchio
+from pulseio import PWMOut
+from adafruit_dotstar import DotStar
+from adafruit_motor import servo
+from touchio import TouchIn
 from analogio import AnalogIn   
 
 ### SOUND FUNCTIONS
@@ -99,7 +100,13 @@ def note(notestr,durint):
     if (notestr == "rest"):
         sleep(notedur)   
 
-    simpleio.tone(board.D3, notefreq, duration=notedur)
+    buzzer = pulseio.PWMOut(board.D3, variable_frequency=True)
+    NOTEON = 2**15
+    NOTEOFF = 0
+    buzzer.frequency = notefreq
+    buzzer.duty_cycle = NOTEON  # 32768 value is 50% duty cycle, a square wave.
+    sleep(notedur)
+    buzzer.duty_cycle = NOTEOFF
     sleep(notedur/2)
     
 def rest(restint):
@@ -165,8 +172,16 @@ def beep():
 simpleio.tone(board.D3, 1, duration=0)   
     
 # SERVO FUNCTIONS
-leftServo = simpleio.Servo(board.A2)
-rightServo = simpleio.Servo(board.A1)
+
+# create a PWMOut object on Pin A2.
+pwmA2 = pulseio.PWMOut(board.A2, duty_cycle=2 ** 15, frequency=50)
+pwmA1 = pulseio.PWMOut(board.A1, duty_cycle=2 ** 15, frequency=50)
+ 
+# Create a servo object, my_servo.
+leftServo = servo.Servo(pwmA2)
+rightServo = servo.Servo(pwmA1)
+#leftServo = simpleio.Servo(board.A2)
+#rightServo = simpleio.Servo(board.A1)
 
 def go(t,spdtxt="fast"):
     if(spdtxt == 'fast'):
