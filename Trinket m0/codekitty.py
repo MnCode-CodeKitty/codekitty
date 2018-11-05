@@ -181,8 +181,8 @@ def angle2dc(angle):
 # Stop:         1.5 ms  -- old 90   -- 4915
 # Full reverse: 1.0 ms  -- old 0
 
-leftServo = pulseio.PWMOut(board.A2, dutycycle=4915,  frequency=50)
-rightServo = pulseio.PWMOut(board.A1, dutycycle=4915,  frequency=50)
+leftServo = pulseio.PWMOut(board.A2, duty_cycle=4915,  frequency=50)
+rightServo = pulseio.PWMOut(board.A1, duty_cycle=4915,  frequency=50)
 
 def stop():
     leftServo.duty_cycle = angle2dc(90)
