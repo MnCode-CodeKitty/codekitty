@@ -3,7 +3,8 @@ import simpleio
 import board
 import adafruit_dotstar
 import touchio
-from analogio import AnalogIn   
+from analogio import AnalogIn  
+import pulseio 
 
 ### SOUND FUNCTIONS
 def note(notestr,durint):
@@ -165,66 +166,79 @@ def beep():
 simpleio.tone(board.D3, 1, duration=0)   
     
 # SERVO FUNCTIONS
-leftServo = simpleio.Servo(board.A2)
-rightServo = simpleio.Servo(board.A1)
+
+def ms2dc(ms):
+    # convert ms to 16 bit duty cycle
+    return int(65535 * ms / 20)
+
+def angle2dc(angle):
+    # convert 0 to 180 degree angle to 16 bit duty cycle
+    ms = 1 + (angle/180)
+    return int(65535 * ms / 20)
+
+# Servo runs at 50Hz with the following duty cycle times:
+# Full forward: 2.0 ms  -- old 180
+# Stop:         1.5 ms  -- old 90   -- 4915
+# Full reverse: 1.0 ms  -- old 0
+
+leftServo = pulseio.PWMOut(board.A2, dutycycle=4915,  frequency=50)
+rightServo = pulseio.PWMOut(board.A1, dutycycle=4915,  frequency=50)
+
+def stop():
+    leftServo.duty_cycle = angle2dc(90)
+    rightServo.duty_cycle = angle2dc(90)
 
 def go(t,spdtxt="fast"):
     if(spdtxt == 'fast'):
-        leftServo.angle = 0
-        rightServo.angle = 180
+        leftServo.duty_cycle = angle2dc(0)
+        rightServo.duty_cycle = angle2dc(180)
     elif(spdtxt == 'slow'):
-        leftServo.angle = 50
-        rightServo.angle = 120
+        leftServo.duty_cycle = angle2dc(50)
+        rightServo.duty_cycle = angle2dc(120)
     else:
         print("Invalid Argument")
     sleep(t)
-    leftServo.angle = 90
-    rightServo.angle = 90
+    stop()
 
-def stop():
-    leftServo.angle = 90
-    rightServo.angle = 90
+
     
 def left(turn=90):
     if(turn == 90):
-        leftServo.angle = 90
-        rightServo.angle = 180
+        leftServo.duty_cycle = angle2dc(90)
+        rightServo.duty_cycle = angle2dc(180)
         sleep(.35)
     elif(turn == 45):
-        leftServo.angle = 90
-        rightServo.angle = 120
+        leftServo.duty_cycle = angle2dc(90)
+        rightServo.duty_cycle = angle2dc(120)
         sleep(.6)
     else:
         print("Invalid Argument")
-    leftServo.angle = 90
-    rightServo.angle = 90
+    stop()
     
 def right(turn=90):
     if(turn == 90):
-        leftServo.angle = 0
-        rightServo.angle = 90
+        leftServo.duty_cycle = angle2dc(0)
+        rightServo.duty_cycle = angle2dc(90)
         sleep(.65)
     elif(turn == 45):
-        leftServo.angle = 60
-        rightServo.angle = 90
+        leftServo.duty_cycle = angle2dc(60)
+        rightServo.duty_cycle = angle2dc(90)
         sleep(.5)
     else:
         print("Invalid Argument")
-    leftServo.angle = 90
-    rightServo.angle = 90
+    stop()
     
 def back(t,spdtxt="fast"):
     if(spdtxt == 'fast'):
-        leftServo.angle = 180
-        rightServo.angle = 0
+        leftServo.duty_cycle = angle2dc(180)
+        rightServo.duty_cycle = angle2dc(0)
     elif(spdtxt == 'slow'):
-        leftServo.angle = 120
-        rightServo.angle = 60
+        leftServo.duty_cycle = angle2dc(120)
+        rightServo.duty_cycle = angle2dc(60)
     else:
         print("Invalid Argument")
     sleep(t)
-    leftServo.angle = 90
-    rightServo.angle = 90
+    stop()
 
 ### TOUCH FUNCTIONS
 touch_pad = board.A0
