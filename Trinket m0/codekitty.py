@@ -176,6 +176,13 @@ def angle2dc(angle):
     ms = 1 + (angle/180)
     return int(65535 * ms / 20)
 
+
+def unit2dc(speed):
+    # convert -1 to 1 to 16 bit duty cycle
+    ms = (1 + speed) * 1000 
+    return int(65535 * ms / 20)
+
+
 # Servo runs at 50Hz with the following duty cycle times:
 # Full forward: 2.0 ms  -- old 180
 # Stop:         1.5 ms  -- old 90   -- 4915
@@ -183,6 +190,10 @@ def angle2dc(angle):
 
 leftServo = pulseio.PWMOut(board.A2, dutycycle=4915,  frequency=50)
 rightServo = pulseio.PWMOut(board.A1, dutycycle=4915,  frequency=50)
+
+def throttle(speed):
+    leftServo.duty_cycle = unit2dc(speed)
+    rightServo.duty_cycle = unit2dc(speed)
 
 def stop():
     leftServo.duty_cycle = angle2dc(90)
