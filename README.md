@@ -11,6 +11,11 @@
 ## Guidelines 
 
 - To add features, create a feature branch then pull request to merge with master
+```
+git checkout -b "feature/rainbow"
+git checkout -b "fix/cpx4.0"
+git checkout -b "experimental/turret"
+```
 - Master branch corresponds to whatever the most current kitty is using
 - Maintain a branch for each other board
 - Create releases for each board until we no longer support a board
