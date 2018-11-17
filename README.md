@@ -1,5 +1,13 @@
 # codekitty library
 
+## Major Changes
+
+- this will be for cpx
+- no longer need to include a lib folder
+- used cpx lib which replaces simpleio and board
+- broke out sounds to another lib
+
+
 ## Guidelines 
 
 - To add features, create a feature branch then pull request to merge with master
