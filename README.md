@@ -10,7 +10,7 @@
 
 ## Guidelines 
 
-- To add features, create a feature branch then pull request to merge with master. Example git comands:
+- To add features, create a feature branch then pull request to merge with master. Example git commands:
 ```
 git checkout -b "feature/rainbow"
 git checkout -b "fix/cpx4.0"
