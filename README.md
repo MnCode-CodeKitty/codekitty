@@ -20,6 +20,7 @@ git checkout -b "board/trinketM0"
 - Master branch corresponds to whatever the most current kitty is using
 - Maintain a branch for each other board
 - Create releases for each board until we no longer support a board
+  - Release will only include .py files from this repo
 - Use semantic versioning for releases
 - No versioning in master
 - https://github.com/adafruit/Adafruit_CircuitPython_Bundle/releases
