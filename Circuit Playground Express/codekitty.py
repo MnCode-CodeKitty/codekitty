@@ -162,7 +162,7 @@ en = wn / 8
 
 def note(freq,dur):
     cpx.play_tone(freq,dur)
-
+ 
   
 def march():
     # MEASURE 1
@@ -242,12 +242,15 @@ def hedwig():
 
     
 def beep():
-    note(A4,4)
+    note(A4,en)
 
     
 ###
 ### Neopixel functions
 ###
+# Set the brightness of the NeoPixels
+# Range is 0.004 to 1.0
+cpx.pixels.brightness = 0.1
 
 # Setup the colors
 red=(255, 0, 0)
