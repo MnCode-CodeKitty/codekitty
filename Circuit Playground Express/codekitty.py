@@ -33,9 +33,16 @@ def stop():
     
 def go(t,spd=5):
     if spd in range(1,7):
-        cspd=(spd*10)+120
-        leftServo.duty_cycle = angle2dc(cspd)
-        rightServo.duty_cycle = angle2dc(cspd)
+### Uncomment these lines if one of your servos is running backward
+#        lcspd=(spd*10)+120
+#        rcspd=(spd*10)+120 
+#        leftServo.duty_cycle = angle2dc(lcspd)
+#        rightServo.duty_cycle = angle2dc(rcspd)
+### Comment out the next 4 lines if one of your servos is running backward
+       lcspd=(spd*10)+120
+       rcspd=80-(spd*10)
+       leftServo.duty_cycle = angle2dc(lcspd)
+       rightServo.duty_cycle = angle2dc(rcspd) 
     else:
         print("[ckSpeed must be between 1 and 6")
     sleep(t)
@@ -44,9 +51,14 @@ def go(t,spd=5):
 
 def left(t,spd=5):
     if spd in range(1,7):
-        cspd=(spd*10)+120
-        leftServo.duty_cycle = angle2dc(90)
-        rightServo.duty_cycle = angle2dc(cspd)
+### Uncomment these lines if your right servo is running backward
+#        rcspd=(spd*10)+120 
+#        leftServo.duty_cycle = angle2dc(90)
+#        rightServo.duty_cycle = angle2dc(rcspd)
+### Comment out the next 3 lines if your right servo is running backward
+       rcspd=80-(spd*10)
+       leftServo.duty_cycle = angle2dc(90)
+       rightServo.duty_cycle = angle2dc(rcspd) 
     else:
         print("[ckSpeed must be between 1 and 6")
     sleep(t)
@@ -55,9 +67,14 @@ def left(t,spd=5):
     
 def right(t,spd=5):
     if spd in range(1,7):
-        cspd=(spd*10)+120
-        leftServo.duty_cycle = angle2dc(cspd)
-        rightServo.duty_cycle = angle2dc(90)
+### Uncomment these lines if your left servo is running backward
+#        lcspd=(spd*10)+120
+#        leftServo.duty_cycle = angle2dc(lcspd)
+#        rightServo.duty_cycle = angle2dc(90)
+### Comment out the next 3 lines if your left servo is running backward
+       lcspd=80-(spd*10)
+       leftServo.duty_cycle = angle2dc(lcspd)
+       rightServo.duty_cycle = angle2dc(90) 
     else:
         print("[ckSpeed must be between 1 and 6")
     sleep(t)
@@ -66,13 +83,21 @@ def right(t,spd=5):
     
 def back(t,spd=5):
     if spd in range(1,7):
-        cspd=70-(spd*10)
-        leftServo.duty_cycle = angle2dc(cspd)
-        rightServo.duty_cycle = angle2dc(cspd)
+### Uncomment these lines if one of your servos is running backward
+#        lcspd=(spd*10)+120 
+#        rcspd=(spd*10)+120
+#        leftServo.duty_cycle = angle2dc(lcspd)
+#        rightServo.duty_cycle = angle2dc(rcspd)
+### Comment out the next 4 lines if one of your servos is running backward
+       lcspd=80-(spd*10)
+       rcspd=(spd*10)+120
+       leftServo.duty_cycle = angle2dc(lcspd)
+       rightServo.duty_cycle = angle2dc(rcspd) 
     else:
         print("[ckSpeed must be between 1 and 6")
     sleep(t)
     stop()
+
     
 ###
 ### Sound Functions
@@ -182,6 +207,39 @@ def march():
     note(F3,4)
     note(Gs3,2)
 
+
+def hedwig():
+    note(E4, qn)
+    note(A4, qn)
+    note(C5, qn)
+    note(B4, qn)
+    note(A4, hn)
+    note(E5, qn)
+    note(D5, hn)
+    note(B4, dhn)
+    note(A4, qn)
+    note(C5, qn)
+    note(B4, qn)
+    note(G4, hn)
+    note(B4, qn)
+    note(E4, dhn)
+    note(E4, qn)
+    note(A4, qn)
+    note(C5, qn)
+    note(B4, qn)
+    note(A4, hn)
+    note(E5, qn)
+    note(G5, hn)
+    note(F5, qn)
+    note(F5, wn)
+    note(C5, qn)
+    note(F5, qn)
+    note(E5, qn)
+    note(E5, qn)
+    note(E4, wn)
+    note(C5, qn)
+    note(A4, dhn)
+
     
 def beep():
     note(A4,4)
@@ -201,4 +259,3 @@ pink=(255, 192, 203)
 purple=(238, 130, 238)
 white=(255, 255, 255)
 black=(0, 0, 0)
-
