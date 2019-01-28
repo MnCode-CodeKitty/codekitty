@@ -3,8 +3,13 @@ from time import sleep
 from adafruit_circuitplayground.express import cpx
 from pulseio import PWMOut
 
+#
+# Setup
+#
+def online():
+    print("--- Code Kitty [CK] v3 online ---")
 
-#    
+#
 # SERVO FUNCTIONS
 #
 def ms2dc(ms):
@@ -30,88 +35,70 @@ def stop():
     leftServo.duty_cycle = angle2dc(90)
     rightServo.duty_cycle = angle2dc(90)
 
-    
+
 def go(t,spd=5):
     if spd in range(1,7):
-### Uncomment these lines if one of your servos is running backward
-#        lcspd=(spd*10)+120
-#        rcspd=(spd*10)+120 
-#        leftServo.duty_cycle = angle2dc(lcspd)
-#        rightServo.duty_cycle = angle2dc(rcspd)
-### Comment out the next 4 lines if one of your servos is running backward
-       lcspd=(spd*10)+120
-       rcspd=80-(spd*10)
+       rcspd=(spd*10)+120
+       lcspd=80-(spd*10)
        leftServo.duty_cycle = angle2dc(lcspd)
-       rightServo.duty_cycle = angle2dc(rcspd) 
+       rightServo.duty_cycle = angle2dc(rcspd)
     else:
-        print("[ckSpeed must be between 1 and 6")
+        print("[CK] Speed must be between 1 and 6")
     sleep(t)
     stop()
 
 
 def left(t,spd=5):
     if spd in range(1,7):
-### Uncomment these lines if your right servo is running backward
-#        rcspd=(spd*10)+120 
-#        leftServo.duty_cycle = angle2dc(90)
-#        rightServo.duty_cycle = angle2dc(rcspd)
-### Comment out the next 3 lines if your right servo is running backward
-       rcspd=80-(spd*10)
+       rcspd=(spd*10)+120
        leftServo.duty_cycle = angle2dc(90)
-       rightServo.duty_cycle = angle2dc(rcspd) 
+       rightServo.duty_cycle = angle2dc(rcspd)
     else:
-        print("[ckSpeed must be between 1 and 6")
+        print("[CK] Speed must be between 1 and 6")
     sleep(t)
     stop()
 
-    
+
 def right(t,spd=5):
     if spd in range(1,7):
-### Uncomment these lines if your left servo is running backward
-#        lcspd=(spd*10)+120
-#        leftServo.duty_cycle = angle2dc(lcspd)
-#        rightServo.duty_cycle = angle2dc(90)
-### Comment out the next 3 lines if your left servo is running backward
-       lcspd=80-(spd*10)
+       lcspd=(spd*10)+120
        leftServo.duty_cycle = angle2dc(lcspd)
-       rightServo.duty_cycle = angle2dc(90) 
+       rightServo.duty_cycle = angle2dc(90)
     else:
-        print("[ckSpeed must be between 1 and 6")
+        print("[CK] Speed must be between 1 and 6")
     sleep(t)
     stop()
 
-    
+
 def back(t,spd=5):
     if spd in range(1,7):
-### Uncomment these lines if one of your servos is running backward
-#        lcspd=(spd*10)+120 
-#        rcspd=(spd*10)+120
-#        leftServo.duty_cycle = angle2dc(lcspd)
-#        rightServo.duty_cycle = angle2dc(rcspd)
-### Comment out the next 4 lines if one of your servos is running backward
-       lcspd=80-(spd*10)
-       rcspd=(spd*10)+120
+       rcspd=80-(spd*10)
+       lcspd=(spd*10)+120
        leftServo.duty_cycle = angle2dc(lcspd)
-       rightServo.duty_cycle = angle2dc(rcspd) 
+       rightServo.duty_cycle = angle2dc(rcspd)
     else:
-        print("[ckSpeed must be between 1 and 6")
+        print("[CK] Speed must be between 1 and 6")
     sleep(t)
     stop()
 
-    
+
 ###
 ### Sound Functions
 ###
 def meow():
+    print("[CK] \"Meow\"")
     cpx.play_file("Meow.wav")
-    
-    
+
+
+
 def purr():
+    print("[CK] *purr*")
     cpx.play_file("Purr.wav")
 
 
-# Setup the note frequencies    
-# OCTAVE 3 
+
+# Setup the note frequencies
+# OCTAVE 3
 C3 = 131
 Cs3 = 139
 D3 = 147
@@ -154,58 +141,59 @@ B5 = 988
 # set up time signature
 wn = 1.5  # adjust this to change tempo of everything
 # these notes are fractions of the whole note
+# dotted notes are notes * 1.5
 hn = wn / 2
 qn = wn / 4
-dqn = qn * 1.5
 en = wn / 8
 
 
 def note(freq,dur):
     cpx.play_tone(freq,dur)
- 
-  
+
+
+
 def march():
     # MEASURE 1
-    note(A4,2)
-    note(A4,2)
-    note(A4,2)
-    note(F4,4)
-    note(C4,4)
-    note(A4,2)
-    note(F4,4)
-    note(C4,4)
-    note(A4,1)
+    note(A4,hn)
+    note(A4,hn)
+    note(A4,hn)
+    note(F4,qn)
+    note(C4,qn)
+    note(A4,hn)
+    note(F4,qn)
+    note(C4,qn)
+    note(A4,wn)
     # MEASURE 2
-    note(E5,2)
-    note(E5,2)
-    note(E5,2)
-    note(F5,4)
-    note(C5,4)
-    note(Gs4,2)
-    note(F4,4)
-    note(C4,4)
-    note(A4,1)
-    note(A5,2)
-    note(A4,4)
-    note(A4,4)
-    note(A5,2)
-    note(Gs5,4)
-    note(G5,4)
+    note(E5,hn)
+    note(E5,hn)
+    note(E5,hn)
+    note(F5,qn)
+    note(C5,qn)
+    note(Gs4,hn)
+    note(F4,qn)
+    note(C4,qn)
+    note(A4,wn)
+    note(A5,hn)
+    note(A4,qn)
+    note(A4,qn)
+    note(A5,hn)
+    note(Gs5,qn)
+    note(G5,qn)
     # MEASURE 3
-    note(Fs5,4)
-    note(F5,4)
-    note(Fs5,4)
-    note(Bb4,4)
-    note(Eb4,2)
-    note(D4,4)
-    note(Cs4,4)
-    note(C4,4)
-    note(B4,4)
-    note(C4,4)
-    note(F3,4)
-    note(Gs3,2)
-    note(F3,4)
-    note(Gs3,2)
+    note(Fs5,qn)
+    note(F5,qn)
+    note(Fs5,qn)
+    note(Bb4,qn)
+    note(Eb4,hn)
+    note(D4,qn)
+    note(Cs4,qn)
+    note(C4,qn)
+    note(B4,qn)
+    note(C4,qn)
+    note(F3,qn)
+    note(Gs3,hn)
+    note(F3,qn)
+    note(Gs3,hn)
 
 
 def hedwig():
@@ -216,13 +204,13 @@ def hedwig():
     note(A4, hn)
     note(E5, qn)
     note(D5, hn)
-    note(B4, dhn)
+    note(B4, (hn*1.5))
     note(A4, qn)
     note(C5, qn)
     note(B4, qn)
     note(G4, hn)
     note(B4, qn)
-    note(E4, dhn)
+    note(E4, (hn*1.5))
     note(E4, qn)
     note(A4, qn)
     note(C5, qn)
@@ -231,20 +219,20 @@ def hedwig():
     note(E5, qn)
     note(G5, hn)
     note(F5, qn)
-    note(F5, wn)
+    note(F5, hn)
     note(C5, qn)
     note(F5, qn)
     note(E5, qn)
     note(E5, qn)
-    note(E4, wn)
+    note(E4, hn)
     note(C5, qn)
-    note(A4, dhn)
+    note(A4, (hn*1.5))
 
-    
+
 def beep():
     note(A4,en)
 
-    
+
 ###
 ### Neopixel functions
 ###
