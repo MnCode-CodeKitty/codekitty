@@ -61,7 +61,7 @@ def left(t,spd=5):
 
 def right(t,spd=5):
     if spd in range(1,7):
-       lcspd=(spd*10)+120
+       lcspd=80-(spd*10)
        leftServo.duty_cycle = angle2dc(lcspd)
        rightServo.duty_cycle = angle2dc(90)
     else:
